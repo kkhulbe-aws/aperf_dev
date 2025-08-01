@@ -157,7 +157,7 @@ pub mod hotline_reports {
             let output_path = Path::new(&params.report_dir)
                 .join("data")
                 .join("js")
-                .join(format!("{}.html", config.table_id));
+                .join(format!("{}_{}.html", params.run_name, config.table_id));
             let mut file = File::create(output_path)?;
             file.write_all(full_html.as_bytes())?;
         }
@@ -328,6 +328,7 @@ impl Hotline {
 impl GetData for Hotline {
     #[cfg(feature = "hotline")]
     fn custom_raw_data_parser(&mut self, params: ReportParams) -> Result<Vec<ProcessedData>> {
+        println!("In custom parser with run {:?}", params.run_name);
         match hotline_reports::generate_html_files(&params) {
             Ok(_) => (),
             Err(e) => eprintln!("Warning: Failed to generate HTML tables: {}", e),
